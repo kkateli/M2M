@@ -1,0 +1,179 @@
+tags:
+  -
+    name: Sales
+    description: 'The sale collection.'
+  -
+    name: Summary
+    description: 'A summary of the sale data for a specific customer.'
+  -
+    name: SalesByUser
+    description: 'The sales for specific customer.'
+paths:
+  /sales:
+    post:
+      operationId: 'create a new sale'
+      summary: 'Create a new sale.'
+      tags:
+        - SalesByUser
+      responses:
+        '201':
+          description: 'OK - the Sale is created.'
+          schema:
+            x-oad-type: reference
+            $ref: '#/definitions/Sale'
+          x-oad-type: response
+        '422':
+          description: 'Error - Save sale failed.'
+          x-oad-type: response
+      parameters:
+        -
+          $ref: '#/parameters/sale'
+    x-oad-type: operation
+  '/sales/customer/{id}':
+    get:
+      operationId: 'get all sales for a specific customer'
+      summary: 'Get all sales for a specific customer.'
+      tags:
+        - SalesByUser
+      responses:
+        '200':
+          description: 'succeed'
+          schema:
+            x-oad-type: array
+            type: array
+            items:
+              x-oad-type: reference
+              $ref: '#/definitions/Sale'
+          x-oad-type: response
+        '404':
+          description: 'Error - No sales found for that customer id'
+          x-oad-type: response
+    parameters:
+      -
+        name: id
+        in: path
+        description: 'customer ID'
+        required: true
+        type: string
+        x-oad-type: parameter
+    x-oad-type: operation
+  '/sales/customer/{id}/summary':
+    get:
+      operationId: 'get summary for a customer'
+      summary: 'Gets a summary for a customer'
+      tags:
+        - Summary
+      responses:
+        '200':
+          description: 'The summary found'
+          schema:
+            x-oad-type: reference
+            $ref: '#/definitions/Summary'
+          x-oad-type: response
+        '404':
+          description: 'Error - the summary is not there'
+          x-oad-type: response
+    parameters:
+      -
+        name: id
+        in: path
+        description: 'Customers id'
+        required: true
+        type: string
+        x-oad-type: parameter
+    x-oad-type: operation
+parameters:
+  sale:
+    name: sale
+    in: body
+    required: true
+    schema:
+      x-oad-type: reference
+      $ref: '#/definitions/Sale'
+    x-oad-type: parameter
+responses:
+  '404':
+    description: 'Error - No sale matching the given ID was found.'
+    x-oad-type: response
+definitions:
+  Customer:
+    x-oad-type: object
+    type: object
+    properties:
+      id:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      email:
+        type: string
+  Sale:
+    x-oad-type: object
+    type: object
+    properties:
+      id:
+        type: string
+      saleDate:
+        type: string
+      uri:
+        type: string
+      customer:
+        $ref: '#/definitions/Customer'
+      totals:
+        $ref: '#/definitions/Totals'
+      saleItem:
+        type: array
+        items:
+          $ref: '#/definitions/SaleItem'
+  SaleItem:
+    x-oad-type: object
+    type: object
+    properties:
+      productId:
+        type: string
+      quantity:
+        type: number
+        format: double
+      price:
+        type: number
+        format: double
+  Totals:
+    x-oad-type: object
+    type: object
+    properties:
+      totalPrice:
+        type: number
+        format: double
+      totalTax:
+        type: number
+        format: double
+      totalPayment:
+        type: number
+        format: double
+  Summary:
+    x-oad-type: object
+    type: object
+    properties:
+      numberOfSales:
+        type: integer
+        format: int32
+      totalPayment:
+        type: number
+        format: double
+      group:
+        type: string
+      uri:
+        type: string
+info:
+  title: 'Sales service'
+  version: '0.0.0'
+  description: 'Manages sales in the collection.'
+basePath: /api
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+swagger: '2.0'

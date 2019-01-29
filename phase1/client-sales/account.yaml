@@ -1,0 +1,97 @@
+swagger: '2.0'
+info:
+  title: sales service API
+  version: 0.0.0
+  description: Manages sales in the collection.
+basePath: /api
+consumes:
+  - application/json
+produces:
+  - application/json
+schemes:
+  - http
+tags:
+  - name: Customers
+    description: A collection of customers
+  - name: Customer
+    description: A customer account
+paths:
+  '/customers/account/{username}':
+    put:
+      operationId: update an account
+      summary: Update an existing account
+      tags:
+        - Customer
+      responses:
+        '204':
+          description: OK - Customer updated.
+        '404':
+          description: Not Found
+        '409':
+          description: Conflict
+      parameters:
+        - name: username
+          in: path
+          required: true
+          type: string
+        - in: body
+          name: customer
+          description: The new details for the item.
+          required: true
+          schema:
+            $ref: '#/definitions/Customer'
+  '/customers':
+    get:
+      operationId: getCustomers
+      summary: |-
+        A client needs to be able to get all registered customer
+         accounts
+      tags:
+        - Customers
+      responses:
+        '200':
+          description: <code>200</code> with the customers in the collection.
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Customer'
+    post:
+      operationId: post a customer
+      tags:
+        - Customers
+      summary: A client needs to be able to create a new customer account
+      parameters:
+        - in: body
+          name: customer
+          description: The account to add to the collection.
+          required: true
+          schema:
+            $ref: '#/definitions/Customer'
+      responses:
+        '201':
+          description: >-
+            OK - Customer created.  URI of customer will be available in the "uri"
+            field
+          schema:
+              $ref: '#/definitions/Customer'
+        '422':
+          description: Error - Customer username already exists
+definitions:
+  Customer:
+    type: object
+    description: Details for a customer in the collection
+    properties:
+      userName:
+        type: string
+      firstName:
+        type: string
+      lastName:
+        type: string
+      email:
+        type: string
+      group:
+        type: string
+      uri:
+        type: string
+    required:
+    - userName

@@ -1,0 +1,3 @@
+Git does not track empty directories.
+
+This file is only here so that the directory will exist when the project is cloned.

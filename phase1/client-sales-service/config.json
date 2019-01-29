@@ -1,0 +1,9 @@
+{
+	"apiPackage": "api",
+	"modelPackage": "domain",
+	"invokerPackage": "util",
+	"java8": true,
+	"dateLibrary" : "java8",
+	"bigDecimalAsString" : true,
+	"useRuntimeException" : true
+}

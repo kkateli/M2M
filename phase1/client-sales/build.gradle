@@ -1,0 +1,61 @@
+plugins {
+    id 'java'
+    id 'org.hidetake.swagger.generator' version '2.9.0'
+}
+
+def retrofitVer = '2.3.0'
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src','build/swagger-code-catalogue/src/main/java']
+        }
+        resources {
+            srcDirs = ['conf', 'public']
+        }
+    }
+    
+    test {
+        java {
+            srcDirs = ['tests']
+        }
+    }
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    
+    // https://mvnrepository.com/artifact/com.squareup.retrofit2/retrofit
+    compile group: 'com.squareup.retrofit2', name: 'retrofit', version: retrofitVer
+    
+    // https://mvnrepository.com/artifact/com.squareup.retrofit2/converter-gson
+    compile group: 'com.squareup.retrofit2', name: 'converter-gson', version: retrofitVer
+    
+    // https://mvnrepository.com/artifact/io.swagger/swagger-annotations
+    compile group: 'io.swagger', name: 'swagger-annotations', version: '1.5.18'
+    
+    swaggerCodegen "io.swagger:swagger-codegen-cli:2.3.1"
+    
+    testCompile 'junit:junit:4.12'
+}
+
+swaggerSources {
+    catalogue {
+        inputFile = file('account.yaml')
+        code {
+            language = 'java'
+            library = 'retrofit2'
+            configFile = file('config.json')
+            components = [
+                models:true,
+                apis:true,
+                apiTests:false,
+                supportingFiles:"CollectionFormats.java,StringUtil.java"
+            ]
+        }
+    }
+}
