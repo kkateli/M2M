@@ -1,0 +1,6 @@
+rootProject.name = 'phase2'
+include 'common'
+include 'customer-ajax'
+include 'customer-service'
+include 'sales-service'
+include 'router'

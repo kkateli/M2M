@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html data-ng-app="LoginModule">
+    <head>
+        <script src="js/angular.min.js"></script>
+        <script src="js/angular-resource.min.js"></script>
+        <script src="js/account.js"></script>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>Add a New Customer Account</h1>
+        <div data-ng-controller="LoginController as logCtrl">
+            <fieldset>
+                <legend>Account Details:</legend>
+                <form data-ng-submit="logCtrl.addAccount(newAccount)">
+                    <label>User Name:</label>
+                    <input type="text" data-ng-model="newAccount.userName">
+                    <label>First Name:</label>
+                    <input type="text" data-ng-model="newAccount.firstName">
+                    <label>Last Name:</label>
+                    <input type="text" data-ng-model="newAccount.lastName">
+                    <label>Email:</label>
+                    <input type="text" data-ng-model="newAccount.email">
+                    <button>Add Account</button>
+                </form>
+            </fieldset>
+
+
+        </div>
+    </body>
+</html>

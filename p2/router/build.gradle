@@ -1,0 +1,92 @@
+plugins {
+	id 'java'
+}
+
+def camelVer = '2.21.0'
+def activeMqVer = '5.15.3'
+def slf4jVer = '1.7.25'
+def logbackVer = '1.2.3'
+
+sourceSets {
+	main {
+		java {
+			srcDir 'src'
+		}
+		resources {
+			srcDir 'conf'
+		}
+	}
+	test {
+		java {
+			srcDir 'tests'
+		}
+	}
+}
+
+/*
+The 'check' task runs the unit tests as part of the standard build.
+
+Our tests need the servers running, so this causes the build to fail if
+the servers are not running.
+
+The only thing the check task is doing in our builds is running the tests,
+so lets just remove the check task to avoid this problem.
+ */
+build {
+	dependsOn.remove("check")
+}
+
+configurations {
+	// using the slf4j to unify the logging, so prevent clogging from being used
+	all*.exclude module:'commons-logging'
+
+	// exclude unneeded CXF transitive dependencies
+	all*.exclude group: 'xml-resolver', module: 'xml-resolver'
+	all*.exclude group: 'org.apache.cxf', module:'cxf-rt-rs-security-oauth'
+	all*.exclude group: 'org.apache.cxf', module: 'cxf-rt-features-clustering'
+	all*.exclude group: 'org.apache.cxf', module: 'cxf-rt-ws-addr'
+}
+
+dependencies {
+	compile project (':common')
+
+	// Camel JMS support
+	compile group: 'org.apache.camel', name: 'camel-jms', version: camelVer
+	compile group: 'org.apache.activemq', name: 'activemq-broker', version: activeMqVer
+
+	// Camel JSON support (via GSON)
+	compile group: 'org.apache.camel', name: 'camel-gson', version: camelVer
+
+	// Camel Jetty support
+	compile group: 'org.apache.camel', name: 'camel-jetty', version: camelVer
+
+	// Camel CXF support (for SOAP/RPC services)
+	compile group: 'org.apache.camel', name: 'camel-cxf', version: camelVer
+
+	// Camel HTTP client support (for REST services)
+	compile group: 'org.apache.camel', name: 'camel-http4', version: camelVer
+
+	// Camel RMI support
+	compile group: 'org.apache.camel', name: 'camel-rmi', version: camelVer
+
+	// Camel Email support
+	compile group: 'org.apache.camel', name: 'camel-mail', version: camelVer
+        compile group: 'org.apache.camel', name: 'camel-jsonpath', version: camelVer
+        
+    
+	// logging
+	compile group: 'ch.qos.logback', name: 'logback-classic', version: logbackVer
+	compile group: 'org.slf4j', name: 'jcl-over-slf4j', version: slf4jVer
+	compile group: 'org.slf4j', name: 'jul-to-slf4j', version: slf4jVer
+
+	// GreenMail mock mail server
+	compile group: 'com.icegreen', name: 'greenmail', version: '1.5.7'
+
+
+	/* testing dependencies */
+
+	// JUnit
+	testCompile group: 'junit', name: 'junit', version: '4.12'
+
+}
+
